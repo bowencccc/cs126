@@ -5,23 +5,40 @@ import static org.junit.Assert.assertEquals;
 
 public class TicTacToeBoardTest {
   @Test
-  public void testValidBoardNoWinner() throws Exception{
-    TicTacToeBoard board = new TicTacToeBoard(null);
-    assertEquals(Evaluation.UnreachableState, board.evaluate());
+  public void testValidBoardNoWinner(){
+    //check illegal input
+    TicTacToeBoard board = new TicTacToeBoard("xx");
+    assertEquals(Evaluation.Invalid, board.evaluate());
 
-    TicTacToeBoard board2 = new TicTacToeBoard("OX");
-    assertEquals(Evaluation.UnreachableState, board2.evaluate());
+    TicTacToeBoard il_board = new TicTacToeBoard("xxxxxxxxxxxxx");
+    assertEquals(Evaluation.Invalid, il_board.evaluate());
 
-    TicTacToeBoard board3 = new TicTacToeBoard("xxxxxxxxxxx");
-    assertEquals(Evaluation.UnreachableState, board3.evaluate());
+    TicTacToeBoard null_board = new TicTacToeBoard(null);
+    assertEquals(Evaluation.Invalid, null_board.evaluate());
 
-    TicTacToeBoard board4 = new TicTacToeBoard("xxx123456");
-    assertEquals(Evaluation.Xwins, board4.evaluate());
+    //check unreachable input
+    TicTacToeBoard unReachable_board = new TicTacToeBoard("xxxxxxxxx");
+    assertEquals(Evaluation.UnreachableState, unReachable_board.evaluate());
 
-    TicTacToeBoard board5 = new TicTacToeBoard("o12o34o56");
-    assertEquals(Evaluation.Owins, board5.evaluate());
+    TicTacToeBoard unReachable_board2 = new TicTacToeBoard("xxxxoo123");
+    assertEquals(Evaluation.UnreachableState, unReachable_board2.evaluate());
 
-    TicTacToeBoard board6 = new TicTacToeBoard("werdaasde");
-    assertEquals(Evaluation.NoWinner, board6.evaluate());
+    TicTacToeBoard unReachable_board3 = new TicTacToeBoard("xxxooo123");
+    assertEquals(Evaluation.UnreachableState, unReachable_board3.evaluate());
+
+    //check Xwins
+    TicTacToeBoard xwin_board = new TicTacToeBoard("xxxoo3456");
+    assertEquals(Evaluation.Xwins, xwin_board.evaluate());
+
+    //check Owins
+    TicTacToeBoard owin_board = new TicTacToeBoard("oxxox4o56");
+    assertEquals(Evaluation.Owins, owin_board.evaluate());
+
+    //check no winner
+    TicTacToeBoard nowinner_board = new TicTacToeBoard("werdaasde");
+    assertEquals(Evaluation.NoWinner, nowinner_board.evaluate());
+
+    TicTacToeBoard nowinner_board2 = new TicTacToeBoard("Oxoxx.O12");
+    assertEquals(Evaluation.NoWinner, nowinner_board2.evaluate());
   }
 }

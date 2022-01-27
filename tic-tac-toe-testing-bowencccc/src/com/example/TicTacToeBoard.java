@@ -7,15 +7,18 @@ import java.util.Locale;
  */
 public class TicTacToeBoard {
   String state;
+  Boolean valid;
   /**
    * This method should load a string into your TicTacToeBoard class.
    * @param board The string representing the board
    */
   public TicTacToeBoard(String board) {
     if (board == null || board.length() != 9) {
+      valid = false;
       return;
     }
     state = board;
+    valid = true;
   }
 
   /**
@@ -23,13 +26,20 @@ public class TicTacToeBoard {
    * @return an enum value corresponding to the board evaluation
    */
   public Evaluation evaluate() {
+    // Return invalid if the board is invalid
+    if (!valid) {
+      return Evaluation.Invalid;
+    }
+    // Return unreachablestate if the board is not reachable by applying the helper function
     if (!check_reachable()) {
       return Evaluation.UnreachableState;
     }
+    // Evaluate the winner if the state is reachable
     boolean x_win = check_win('x');
     boolean o_win = check_win('o');
     if (x_win) return Evaluation.Xwins;
     if (o_win) return Evaluation.Owins;
+    //otherwise return no winner
     return Evaluation.NoWinner;
   }
 
@@ -40,6 +50,7 @@ public class TicTacToeBoard {
   public boolean check_reachable() {
     state = state.toLowerCase();
     int count = 0;
+    // count the number of xs and os
     for(int i = 0; i < state.length(); i++) {
       if (state.charAt(i) == 'x') {
         count++;
@@ -48,17 +59,26 @@ public class TicTacToeBoard {
         count--;
       }
     }
+    // check that number of xs = number of os + 1 or number of xs = number of os
     if (count > 1 || count < 0) {
       return false;
     } else {
       if (count == 1) {
+        // if number of xs = number of os + 1, x wins and the state is reachable
         return true;
       } else {
+        // otherwise number of xs = number of os, o wins and the state is reachable
         boolean x_win = check_win('x');
         boolean o_win = check_win('o');
-        if (x_win || o_win) {
+        //check whether o wins -> reachable
+        if (o_win) {
+          if (!x_win) {
+            return true;
+          }
+          //check whether x also wins -> unreachable
           return false;
         } else {
+          // there is no winner, thus reachable
           return true;
         }
       }
